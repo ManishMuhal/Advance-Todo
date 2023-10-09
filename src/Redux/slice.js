@@ -1,0 +1,44 @@
+import { createSlice } from "@reduxjs/toolkit";
+
+export const todoSlice = createSlice({
+  name: "todolist",
+  initialState: {
+    input: "",
+    tasks: [],
+    isEditing: false,
+  },
+  reducers: {
+    setInput: (state, action) => {
+      state.input = action.payload;
+    },
+    addTask: (state) => {
+      const input = state.input.trim();
+
+      if (input !== "") {
+        if (state.isEditing === false) {
+          state.tasks = [...state.tasks, input];
+        } else {
+          state.tasks[state.isEditing] = input;
+          state.isEditing = false;
+        }
+        state.input = "";
+      }
+    },
+    deleteTask: (state, action) => {
+      state.tasks = state.tasks.filter((task, index) => index !== action.payload);
+    },
+    editTask: (state, action) => {
+      state.input = state.tasks[action.payload];
+      state.isEditing = action.payload;
+    },
+    clearTasks: (state) => {
+      state.input = "";
+      state.tasks = [];
+      state.isEditing = false;
+    },
+  },
+});
+
+export const { setInput, addTask, deleteTask, editTask, clearTasks } = todoSlice.actions;
+
+export default todoSlice.reducer;
